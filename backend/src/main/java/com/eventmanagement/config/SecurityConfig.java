@@ -45,11 +45,18 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz -> authz
                     .requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/events").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/events/upcoming").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/events/search").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/events/category/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/events/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/speakers/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/events").authenticated()
+                    .requestMatchers(HttpMethod.PUT, "/api/events/**").authenticated()
+                    .requestMatchers(HttpMethod.DELETE, "/api/events/**").authenticated()
                     .requestMatchers("/api/admin/**").hasRole("ADMIN")
                     .requestMatchers("/api/registrations/**").authenticated()
-                    .anyRequest().authenticated()
+                    .anyRequest().permitAll()
                 );
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -60,10 +67,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5173", "*"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5173", "http://localhost:3001", "*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        configuration.setAllowCredentials(true);
+        configuration.setAllowCredentials(false);
         configuration.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

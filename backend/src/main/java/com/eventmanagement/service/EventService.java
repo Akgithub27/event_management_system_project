@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,24 +70,27 @@ public class EventService {
     }
 
     public List<EventDTO> getAllEvents(Long userId) {
-        List<Event> events = eventRepository.findAllActiveEvents();
-        return events.stream()
-                .map(event -> {
-                    EventRegistration reg = null;
-                    if (userId != null) {
-                        reg = registrationRepository.findByEventAndUser(event, userRepository.findById(userId).orElse(null))
-                                .orElse(null);
-                    }
-                    return mapToDTO(event, userId);
-                })
-                .collect(Collectors.toList());
+        try {
+            List<Event> events = eventRepository.findAllActiveEvents();
+            return events.stream()
+                    .map(event -> mapToDTO(event, userId))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Error fetching all events", e);
+            return Collections.emptyList();
+        }
     }
 
     public List<EventDTO> getUpcomingEvents(Long userId) {
-        List<Event> events = eventRepository.findUpcomingEvents(LocalDateTime.now());
-        return events.stream()
-                .map(event -> mapToDTO(event, userId))
-                .collect(Collectors.toList());
+        try {
+            List<Event> events = eventRepository.findUpcomingEvents(LocalDateTime.now());
+            return events.stream()
+                    .map(event -> mapToDTO(event, userId))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Error fetching upcoming events", e);
+            return Collections.emptyList();
+        }
     }
 
     public EventDTO getEventById(Long eventId, Long userId) {
@@ -96,17 +100,27 @@ public class EventService {
     }
 
     public List<EventDTO> searchEvents(String searchTerm, Long userId) {
-        List<Event> events = eventRepository.searchEvents(searchTerm);
-        return events.stream()
-                .map(event -> mapToDTO(event, userId))
-                .collect(Collectors.toList());
+        try {
+            List<Event> events = eventRepository.searchEvents(searchTerm);
+            return events.stream()
+                    .map(event -> mapToDTO(event, userId))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Error searching events", e);
+            return Collections.emptyList();
+        }
     }
 
     public List<EventDTO> getEventsByCategory(String category, Long userId) {
-        List<Event> events = eventRepository.findByCategory(category);
-        return events.stream()
-                .map(event -> mapToDTO(event, userId))
-                .collect(Collectors.toList());
+        try {
+            List<Event> events = eventRepository.findByCategory(category);
+            return events.stream()
+                    .map(event -> mapToDTO(event, userId))
+                    .collect(Collectors.toList());
+        } catch (Exception e) {
+            log.error("Error fetching events by category", e);
+            return Collections.emptyList();
+        }
     }
 
     public EventDTO updateEvent(Long eventId, CreateEventRequest request, Long userId) {
