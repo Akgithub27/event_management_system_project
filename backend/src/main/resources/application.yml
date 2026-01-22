@@ -32,6 +32,15 @@ spring:
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000
+  
+  # Enable async processing for non-blocking email sending
+  task:
+    execution:
+      pool:
+        core-size: 2
+        max-size: 5
+        queue-capacity: 100
+      thread-name-prefix: event-async-
 
 server:
   port: 8080
@@ -46,3 +55,4 @@ logging:
   level:
     root: INFO
     com.eventmanagement: DEBUG
+

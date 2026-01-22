@@ -43,3 +43,6 @@
 -- JOIN event_speakers es ON e.id = es.event_id
 -- JOIN speakers s ON es.speaker_id = s.id
 -- ORDER BY e.title, s.name;
+
+
+password: tbbb unit yygw rezj

@@ -20,11 +20,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("SELECT e FROM Event e WHERE e.isActive = true AND e.eventDate >= :currentDate ORDER BY e.eventDate ASC")
     List<Event> findUpcomingEvents(@Param("currentDate") LocalDateTime currentDate);
     
-    @Query("SELECT e FROM Event e WHERE e.isActive = true AND LOWER(e.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
-           "OR LOWER(e.category) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    @Query("SELECT e FROM Event e WHERE e.isActive = true AND (LOWER(e.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) " +
+           "OR LOWER(e.category) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
     List<Event> searchEvents(@Param("searchTerm") String searchTerm);
     
-    @Query("SELECT e FROM Event e WHERE e.isActive = true AND e.category = :category")
+    @Query("SELECT e FROM Event e WHERE e.isActive = true AND LOWER(e.category) = LOWER(:category) ORDER BY e.eventDate ASC")
     List<Event> findByCategory(@Param("category") String category);
     
     @Query("SELECT e FROM Event e WHERE e.isActive = true AND e.venue = :venue")

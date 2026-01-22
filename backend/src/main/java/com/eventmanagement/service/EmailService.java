@@ -2,8 +2,10 @@ package com.eventmanagement.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +15,10 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    @Value("${spring.mail.username}")
+    private String senderEmail;
+
+    @Async
     public void sendWelcomeEmail(String to, String firstName) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -23,15 +29,17 @@ public class EmailService {
                     "You can now browse and register for various events.\n\n" +
                     "Best regards,\n" +
                     "Event Management Team");
-            message.setFrom("noreply@eventmanagement.com");
+            message.setFrom(senderEmail);
 
             mailSender.send(message);
             log.info("Welcome email sent to: {}", to);
         } catch (Exception e) {
-            log.error("Error sending welcome email to: {}", to, e);
+            log.warn("Failed to send welcome email to {}: {}", to, e.getMessage());
+            // Email failure should not block user signup
         }
     }
 
+    @Async
     public void sendRegistrationConfirmation(String to, String firstName, String eventTitle) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -43,15 +51,17 @@ public class EmailService {
                     "We will send you a reminder before the event.\n\n" +
                     "Best regards,\n" +
                     "Event Management Team");
-            message.setFrom("noreply@eventmanagement.com");
+            message.setFrom(senderEmail);
 
             mailSender.send(message);
             log.info("Registration confirmation email sent to: {}", to);
         } catch (Exception e) {
-            log.error("Error sending registration confirmation email to: {}", to, e);
+            log.warn("Failed to send registration confirmation to {}: {}", to, e.getMessage());
+            // Email failure should not block event registration
         }
     }
 
+    @Async
     public void sendEventReminder(String to, String firstName, String eventTitle, String eventDate) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -64,12 +74,13 @@ public class EmailService {
                     "Please make sure to attend!\n\n" +
                     "Best regards,\n" +
                     "Event Management Team");
-            message.setFrom("noreply@eventmanagement.com");
+            message.setFrom(senderEmail);
 
             mailSender.send(message);
             log.info("Event reminder sent to: {}", to);
         } catch (Exception e) {
-            log.error("Error sending event reminder to: {}", to, e);
+            log.warn("Failed to send event reminder to {}: {}", to, e.getMessage());
+            // Email failure should not impact system operations
         }
     }
 }
