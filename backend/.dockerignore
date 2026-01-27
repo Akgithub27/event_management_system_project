@@ -1,0 +1,16 @@
+target/
+.git/
+.gitignore
+.dockerignore
+.env
+.env.local
+*.log
+.vscode/
+.idea/
+*.iml
+node_modules/
+npm-debug.log
+.DS_Store
+README.md
+DOCKER_BUILD.md
+*.md

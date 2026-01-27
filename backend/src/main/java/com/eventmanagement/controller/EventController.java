@@ -1,5 +1,6 @@
 package com.eventmanagement.controller;
 
+import com.eventmanagement.config.JwtProvider;
 import com.eventmanagement.dto.ApiResponse;
 import com.eventmanagement.dto.CreateEventRequest;
 import com.eventmanagement.dto.EventDTO;
@@ -11,7 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -22,6 +26,9 @@ public class EventController {
 
     @Autowired
     private EventService eventService;
+
+    @Autowired
+    private JwtProvider jwtProvider;
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<EventDTO>>> getAllEvents() {
@@ -123,11 +130,26 @@ public class EventController {
     }
 
     private Long getUserIdFromToken() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof String) {
-            // Here you would extract the userId from token
-            // For now, we'll return null and let the service handle it
-            return null;
+        try {
+            String token = getTokenFromRequest();
+            if (token != null && jwtProvider.validateToken(token)) {
+                return jwtProvider.getUserIdFromToken(token);
+            }
+        } catch (Exception e) {
+            log.error("Error extracting userId from token", e);
+        }
+        return null;
+    }
+
+    private String getTokenFromRequest() {
+        try {
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+            String bearerToken = request.getHeader("Authorization");
+            if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+                return bearerToken.substring(7);
+            }
+        } catch (Exception e) {
+            log.debug("Could not extract token from request", e);
         }
         return null;
     }

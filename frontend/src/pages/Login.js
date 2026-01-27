@@ -21,7 +21,15 @@ export const Login = () => {
       const response = await authService.login({ email, password });
       const { data } = response.data;
       
-      login(data, data.token);
+      const userData = {
+        userId: data.userId,
+        email: data.email,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        role: data.role
+      };
+      
+      login(userData, data.token);
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');

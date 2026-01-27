@@ -1,0 +1,87 @@
+services:
+  - type: web
+    name: event-management-backend
+    env: java
+    plan: free
+    buildCommand: mvn clean install -DskipTests
+    startCommand: java -jar target/event-management-system-1.0.0.jar
+    
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: event-management-db
+          property: connectionString
+      
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: event-management-db
+          property: user
+      
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: event-management-db
+          property: password
+      
+      - key: SPRING_DATASOURCE_DRIVER_CLASS_NAME
+        value: com.mysql.cj.jdbc.Driver
+      
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      
+      - key: SPRING_JPA_SHOW_SQL
+        value: "false"
+      
+      - key: JWT_SECRET
+        sync: false
+      
+      - key: JWT_EXPIRATION
+        value: "86400000"
+      
+      - key: MAIL_HOST
+        value: smtp.gmail.com
+      
+      - key: MAIL_PORT
+        value: "587"
+      
+      - key: MAIL_USERNAME
+        sync: false
+      
+      - key: MAIL_PASSWORD
+        sync: false
+      
+      - key: MAIL_FROM_ADDRESS
+        value: noreply@eventmanagement.com
+      
+      - key: SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH
+        value: "true"
+      
+      - key: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE
+        value: "true"
+      
+      - key: SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_REQUIRED
+        value: "true"
+      
+      - key: SPRING_MAIL_PROPERTIES_MAIL_SMTP_CONNECTIONTIMEOUT
+        value: "5000"
+      
+      - key: SPRING_MAIL_PROPERTIES_MAIL_SMTP_TIMEOUT
+        value: "5000"
+      
+      - key: SPRING_MAIL_PROPERTIES_MAIL_SMTP_WRITETIMEOUT
+        value: "5000"
+      
+      - key: SERVER_PORT
+        value: "8080"
+      
+      - key: SERVER_SERVLET_CONTEXT_PATH
+        value: /api
+
+databases:
+  - name: event-management-db
+    databaseName: event_management_db
+    user: event_user
+    plan: free
+    ipAllowList: []

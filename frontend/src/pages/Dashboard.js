@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { eventService } from '../services/api';
 import { AuthContext } from '../context/AuthContext';
 import EventCard from '../components/EventCard';
@@ -12,11 +12,21 @@ export const Dashboard = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, logout } = useContext(AuthContext);
 
   useEffect(() => {
     fetchEvents();
   }, []);
+
+  useEffect(() => {
+    const state = location.state;
+    if (state?.message) {
+      setError('');
+      // Refresh events after event creation
+      fetchEvents();
+    }
+  }, [location]);
 
   const fetchEvents = async () => {
     try {
