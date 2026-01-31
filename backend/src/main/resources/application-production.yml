@@ -65,3 +65,12 @@ logging:
   level:
     root: ${LOGGING_LEVEL_ROOT:INFO}
     com.eventmanagement: ${LOGGING_LEVEL_COM_EVENTMANAGEMENT:DEBUG}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
