@@ -5,10 +5,10 @@ services:
     image: mysql:8.0
     container_name: event-management-mysql
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: event_management_db
-      MYSQL_USER: event_user
-      MYSQL_PASSWORD: event_password123
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-event_management_db}
+      MYSQL_USER: ${MYSQL_USER:-event_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-event_password123}
     ports:
       - "3306:3306"
     volumes:
@@ -20,6 +20,7 @@ services:
       retries: 5
     networks:
       - event-network
+    restart: unless-stopped
 
   backend:
     build:
@@ -27,27 +28,26 @@ services:
       dockerfile: Dockerfile
     container_name: event-management-backend
     ports:
-      - "8080:8080"
+      - "${PORT:-8080}:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/event_management_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-      SPRING_DATASOURCE_USERNAME: event_user
-      SPRING_DATASOURCE_PASSWORD: event_password123
-      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      SPRING_PROFILES_ACTIVE: production
+      DATABASE_URL: jdbc:mysql://${MYSQL_HOST:-mysql}:${MYSQL_PORT:-3306}/${MYSQL_DATABASE:-event_management_db}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
       SPRING_JPA_SHOW_SQL: false
-      JWT_SECRET: your-super-secret-key-that-is-at-least-256-bits-long-please-change-in-production
+      JWT_SECRET: ${JWT_SECRET:-your-super-secret-key-that-is-at-least-256-bits-long-please-change-in-production}
       JWT_EXPIRATION: 86400000
-      MAIL_HOST: smtp.gmail.com
-      MAIL_PORT: 587
+      MAIL_HOST: ${MAIL_HOST:-smtp.gmail.com}
+      MAIL_PORT: ${MAIL_PORT:-587}
       MAIL_USERNAME: ${MAIL_USERNAME:-your-email@gmail.com}
       MAIL_PASSWORD: ${MAIL_PASSWORD:-your-app-password}
-      MAIL_FROM_ADDRESS: noreply@eventmanagement.com
+      MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS:-noreply@eventmanagement.com}
       SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: true
       SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: true
       SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_REQUIRED: true
       SPRING_MAIL_PROPERTIES_MAIL_SMTP_CONNECTIONTIMEOUT: 5000
       SPRING_MAIL_PROPERTIES_MAIL_SMTP_TIMEOUT: 5000
       SPRING_MAIL_PROPERTIES_MAIL_SMTP_WRITETIMEOUT: 5000
+      PORT: ${PORT:-8080}
     depends_on:
       mysql:
         condition: service_healthy

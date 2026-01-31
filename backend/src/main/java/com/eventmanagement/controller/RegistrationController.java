@@ -3,6 +3,12 @@ package com.eventmanagement.controller;
 import com.eventmanagement.config.JwtProvider;
 import com.eventmanagement.dto.ApiResponse;
 import com.eventmanagement.service.RegistrationService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +25,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/registrations")
 @CrossOrigin(origins = "*", maxAge = 3600)
 @Slf4j
+@Tag(name = "Event Registration", description = "Event registration management endpoints")
 public class RegistrationController {
 
     @Autowired
@@ -28,12 +35,21 @@ public class RegistrationController {
     private JwtProvider jwtProvider;
 
     @PostMapping("/events/{eventId}")
-    public ResponseEntity<ApiResponse<Object>> registerForEvent(@PathVariable Long eventId) {
+    @Operation(summary = "Register for event", description = "Register the authenticated user for a specific event")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Event registration successful"),
+        @ApiResponse(responseCode = "400", description = "Invalid request or already registered"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "404", description = "Event not found")
+    })
+    public ResponseEntity<com.eventmanagement.dto.ApiResponse<Object>> registerForEvent(
+            @Parameter(description = "Event ID") @PathVariable Long eventId) {
         log.info("Registering for event: {}", eventId);
         Long userId = extractUserIdFromToken();
         registrationService.registerForEvent(eventId, userId);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.<Object>builder()
+                .body(com.eventmanagement.dto.ApiResponse.<Object>builder()
                     .success(true)
                     .message("Event registration successful")
                     .data(null)
@@ -41,11 +57,19 @@ public class RegistrationController {
     }
 
     @DeleteMapping("/events/{eventId}")
-    public ResponseEntity<ApiResponse<Object>> cancelRegistration(@PathVariable Long eventId) {
+    @Operation(summary = "Cancel event registration", description = "Cancel the user's registration for a specific event")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Registration cancelled successfully"),
+        @ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @ApiResponse(responseCode = "404", description = "Event or registration not found")
+    })
+    public ResponseEntity<com.eventmanagement.dto.ApiResponse<Object>> cancelRegistration(
+            @Parameter(description = "Event ID") @PathVariable Long eventId) {
         log.info("Cancelling registration for event: {}", eventId);
         Long userId = extractUserIdFromToken();
         registrationService.cancelRegistration(eventId, userId);
-        return ResponseEntity.ok(ApiResponse.<Object>builder()
+        return ResponseEntity.ok(com.eventmanagement.dto.ApiResponse.<Object>builder()
                 .success(true)
                 .message("Registration cancelled successfully")
                 .data(null)
