@@ -3,9 +3,9 @@ spring:
     name: event-management-system
   
   datasource:
-    url: jdbc:mysql://turntable.proxy.rlwy.net:48482/railway?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: root
-    password: UOUrchBLOLddRwwRybIrVuHvgCAqwTDZ
+    url: ${DATABASE_URL:jdbc:mysql://turntable.proxy.rlwy.net:48482/railway?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+    username: ${DATABASE_USER:root}
+    password: ${DATABASE_PASSWORD:UOUrchBLOLddRwwRybIrVuHvgCAqwTDZ}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       maximum-pool-size: 10
