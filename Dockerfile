@@ -10,15 +10,21 @@ COPY backend/pom.xml pom.xml
 COPY backend/src src
 
 # Build the application
-RUN mvn clean package -DskipTests -X 2>&1 | head -100
+RUN mvn clean package -DskipTests
+
+# Debug: List what was built
+RUN ls -la /build/target/*.jar
 
 # Stage 2: Runtime stage
 FROM eclipse-temurin:17-jdk-alpine
 
 WORKDIR /app
 
-# Copy the built JAR from builder stage
-COPY --from=builder /build/target/*.jar app.jar
+# Copy the built JAR from builder stage - using specific filename
+COPY --from=builder /build/target/event-management-system-1.0.0.jar app.jar
+
+# Verify JAR exists
+RUN ls -la /app/app.jar
 
 # Create non-root user for security
 RUN addgroup -g 1001 -S appuser && adduser -u 1001 -S appuser -G appuser
