@@ -150,7 +150,7 @@ After deployment to Railway:
 2. Configure CORS if frontend is on different domain
 3. Set up custom domain in Railway settings
 4. Configure SSL/TLS certificates
-5. Set up monitoring and alerts
+5. Set up monitoring and alerts here
 
 ## Database Backup & Recovery
 
