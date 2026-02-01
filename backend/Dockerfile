@@ -4,8 +4,7 @@ FROM maven:3.9.0-eclipse-temurin-17 AS builder
 WORKDIR /build
 
 # Copy pom.xml and source code
-COPY pom.xml .
-COPY src ./src
+COPY . .
 
 # Build the application
 RUN mvn clean package -DskipTests
