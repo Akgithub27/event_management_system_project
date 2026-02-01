@@ -3,9 +3,11 @@ FROM maven:3.9.0-eclipse-temurin-17 AS builder
 
 WORKDIR /build
 
-# Copy everything from backend directory
-COPY ./backend/pom.xml ./
-COPY ./backend/src ./src
+# Copy pom.xml from backend
+COPY backend/pom.xml .
+
+# Copy src from backend
+COPY backend/src ./src
 
 # Build the application
 RUN mvn clean package -DskipTests
