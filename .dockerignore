@@ -1,0 +1,16 @@
+target/
+.git/
+.gitignore
+.github/
+.vscode/
+.idea/
+*.log
+node_modules/
+frontend/
+.DS_Store
+*.iml
+*.class
+*.jar
+*.war
+.gradle/
+build/
