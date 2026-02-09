@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -42,7 +41,7 @@ public class EventController {
     @GetMapping
     @Operation(summary = "Get all events", description = "Retrieve all active events with pagination and filtering")
     @SecurityRequirement(name = "Bearer Authentication")
-    @ApiResponse(responseCode = "200", description = "Events retrieved successfully")
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Events retrieved successfully")
     public ResponseEntity<com.eventmanagement.dto.ApiResponse<List<EventDTO>>> getAllEvents() {
         log.info("Getting all events");
         Long userId = getUserIdFromToken();
@@ -57,7 +56,7 @@ public class EventController {
     @GetMapping("/upcoming")
     @Operation(summary = "Get upcoming events", description = "Retrieve events scheduled for future dates")
     @SecurityRequirement(name = "Bearer Authentication")
-    @ApiResponse(responseCode = "200", description = "Upcoming events retrieved successfully")
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Upcoming events retrieved successfully")
     public ResponseEntity<com.eventmanagement.dto.ApiResponse<List<EventDTO>>> getUpcomingEvents() {
         log.info("Getting upcoming events");
         Long userId = getUserIdFromToken();
@@ -72,8 +71,8 @@ public class EventController {
     @GetMapping("/{id}")
     @Operation(summary = "Get event by ID", description = "Retrieve detailed information about a specific event")
     @SecurityRequirement(name = "Bearer Authentication")
-    @ApiResponse(responseCode = "200", description = "Event retrieved successfully")
-    @ApiResponse(responseCode = "404", description = "Event not found")
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Event retrieved successfully")
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Event not found")
     public ResponseEntity<com.eventmanagement.dto.ApiResponse<EventDTO>> getEventById(
             @Parameter(description = "Event ID") @PathVariable Long id) {
         log.info("Getting event with id: {}", id);
@@ -89,7 +88,7 @@ public class EventController {
     @GetMapping("/search")
     @Operation(summary = "Search events", description = "Search events by title or category")
     @SecurityRequirement(name = "Bearer Authentication")
-    @ApiResponse(responseCode = "200", description = "Events searched successfully")
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Events searched successfully")
     public ResponseEntity<com.eventmanagement.dto.ApiResponse<List<EventDTO>>> searchEvents(
             @Parameter(description = "Search query") @RequestParam String q) {
         log.info("Searching events with query: {}", q);
@@ -105,7 +104,7 @@ public class EventController {
     @GetMapping("/category/{category}")
     @Operation(summary = "Get events by category", description = "Retrieve events filtered by category")
     @SecurityRequirement(name = "Bearer Authentication")
-    @ApiResponse(responseCode = "200", description = "Events retrieved by category successfully")
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Events retrieved by category successfully")
     public ResponseEntity<com.eventmanagement.dto.ApiResponse<List<EventDTO>>> getEventsByCategory(
             @Parameter(description = "Event category") @PathVariable String category) {
         log.info("Getting events by category: {}", category);
@@ -122,9 +121,9 @@ public class EventController {
     @Operation(summary = "Create new event", description = "Create a new event (admin only)")
     @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Event created successfully"),
-        @ApiResponse(responseCode = "400", description = "Invalid request or user not admin"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized")
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Event created successfully"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request or user not admin"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized")
     })
     public ResponseEntity<com.eventmanagement.dto.ApiResponse<EventDTO>> createEvent(@RequestBody CreateEventRequest request) {
         log.info("Creating new event: {}", request.getTitle());
@@ -142,9 +141,9 @@ public class EventController {
     @Operation(summary = "Update event", description = "Update an existing event (admin or creator only)")
     @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Event updated successfully"),
-        @ApiResponse(responseCode = "403", description = "Permission denied"),
-        @ApiResponse(responseCode = "404", description = "Event not found")
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Event updated successfully"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Permission denied"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Event not found")
     })
     public ResponseEntity<com.eventmanagement.dto.ApiResponse<EventDTO>> updateEvent(
             @Parameter(description = "Event ID") @PathVariable Long id,
@@ -163,9 +162,9 @@ public class EventController {
     @Operation(summary = "Delete event", description = "Delete an event (admin or creator only)")
     @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Event deleted successfully"),
-        @ApiResponse(responseCode = "403", description = "Permission denied"),
-        @ApiResponse(responseCode = "404", description = "Event not found")
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Event deleted successfully"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "403", description = "Permission denied"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Event not found")
     })
     public ResponseEntity<com.eventmanagement.dto.ApiResponse<Object>> deleteEvent(
             @Parameter(description = "Event ID") @PathVariable Long id) {

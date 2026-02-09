@@ -5,7 +5,6 @@ import com.eventmanagement.dto.ApiResponse;
 import com.eventmanagement.service.RegistrationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,10 +37,10 @@ public class RegistrationController {
     @Operation(summary = "Register for event", description = "Register the authenticated user for a specific event")
     @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Event registration successful"),
-        @ApiResponse(responseCode = "400", description = "Invalid request or already registered"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "404", description = "Event not found")
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "201", description = "Event registration successful"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "400", description = "Invalid request or already registered"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Event not found")
     })
     public ResponseEntity<com.eventmanagement.dto.ApiResponse<Object>> registerForEvent(
             @Parameter(description = "Event ID") @PathVariable Long eventId) {
@@ -60,9 +59,9 @@ public class RegistrationController {
     @Operation(summary = "Cancel event registration", description = "Cancel the user's registration for a specific event")
     @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Registration cancelled successfully"),
-        @ApiResponse(responseCode = "401", description = "Unauthorized"),
-        @ApiResponse(responseCode = "404", description = "Event or registration not found")
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "Registration cancelled successfully"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "401", description = "Unauthorized"),
+        @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Event or registration not found")
     })
     public ResponseEntity<com.eventmanagement.dto.ApiResponse<Object>> cancelRegistration(
             @Parameter(description = "Event ID") @PathVariable Long eventId) {

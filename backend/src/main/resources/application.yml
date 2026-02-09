@@ -3,9 +3,9 @@ spring:
     name: event-management-system
   
   datasource:
-    url: ${DATABASE_URL:jdbc:mysql://turntable.proxy.rlwy.net:48482/railway?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
-    username: ${DATABASE_USER:root}
-    password: ${DATABASE_PASSWORD:UOUrchBLOLddRwwRybIrVuHvgCAqwTDZ}
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USER}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       maximum-pool-size: 10
@@ -28,10 +28,10 @@ spring:
         order_updates: true
   
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ${MAIL_USERNAME:your-email@gmail.com}
-    password: ${MAIL_PASSWORD:your-app-password}
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
